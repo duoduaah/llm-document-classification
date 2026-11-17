@@ -6,7 +6,6 @@ A small, fully reproducible study of three practical questions in document class
 2. **LLM as judge.** Can a second LLM catch the first one's labeling mistakes?
 3. **Other languages.** Can a model trained or prompted in English classify documents in other languages?
 
-Inspired by public write-ups on content classification for large document platforms. Not affiliated with any company; all data is public.
 
 ## Results at a glance
 
