@@ -1,0 +1,14 @@
+part,condition,lang,n,legal_recall,said_other,mean_conf,accuracy,macro_f1,ci_lo,ci_hi
+A,freeform,de,70,1.0,0.0,0.99,,,,
+A,freeform,en,70,1.0,0.0,0.99,,,,
+A,freeform,es,70,1.0,0.0,0.99,,,,
+A,freeform,fr,70,1.0,0.0,0.989,,,,
+A,freeform,it,70,1.0,0.0,0.99,,,,
+A,start,de,70,1.0,0.0,0.99,,,,
+A,start,en,70,1.0,0.0,0.99,,,,
+A,start,es,70,1.0,0.0,0.99,,,,
+A,start,fr,70,1.0,0.0,0.99,,,,
+A,start,it,70,1.0,0.0,0.99,,,,
+B,freeform,es,100,,0.01,0.96,0.97,0.985,0.967,1.0
+B,freeform,fr,100,,0.0,0.967,0.97,0.98,0.949,1.0
+B,freeform,it,50,,0.0,0.99,1.0,,,

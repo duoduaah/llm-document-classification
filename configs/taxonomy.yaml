@@ -1,0 +1,121 @@
+# taxonomy.yaml  
+#
+# Single source of truth for labels. Used three ways:
+#   1. Human labeling guide for the gold set.
+#   2. Static prefix of the LLM worker prompt and the LLM judge prompt
+#      (static policy text first, the document last, so prompt caching can work).
+#   3. Definition of the evaluation classes.
+
+
+version: 2
+task: document_type_classification
+label_language: en          
+input_languages_tested: [en, de, fr, es, it]   
+closed_set:
+  - research_paper
+  - financial_filing
+  - legal_document
+  - news_article
+  - book_literature
+
+abstain_label: other        
+
+classes:
+  research_paper:
+    definition: >
+      Scholarly work reporting a problem, method, results or analysis,
+      typically with an abstract, structured sections and references.
+    typical_signals:
+      - abstract, introduction, methods, results, references
+      - equations, citations to other papers, technical terminology
+    not_this:
+      - book-length narrative or essays (book_literature)
+      - company disclosures that discuss risk or research spending (financial_filing)
+    data_source: "arXiv PDFs (920 collected; sample about 300)"
+
+  financial_filing:
+    definition: >
+      Company disclosure or regulatory report about a firm's business,
+      risks, finances or governance, such as sections of an annual report.
+    typical_signals:
+      - fiscal years, revenue, risk factors, management discussion
+      - references to the company, shareholders, regulators
+    not_this:
+      - court opinions or legislation (legal_document), even if the filing
+        describes legal proceedings
+      - news coverage of a company (news_article)
+    data_source: "EDGAR-CORPUS 2020 test set (685 records)"
+
+  legal_document:
+    definition: >
+      Court opinions, statutes, legislation, regulations or contracts
+      expressing legal reasoning, rules or obligations.
+    typical_signals:
+      - citations to cases or articles, "the court", "shall", "whereas"
+      - numbered articles or sections, legal terms of art
+    not_this:
+      - a company disclosure that mentions litigation (financial_filing)
+      - a news story about a court case (news_article)
+    data_source: "Static Case Law, Alaska (250 opinions); MultiEURLEX legislation (controlled set)"
+
+  news_article:
+    definition: >
+      Journalistic reporting on recent events, people, business, sport or
+      science, written for a general audience.
+    typical_signals:
+      - who/what/when/where lead, quotes from sources, wire-service style
+    not_this:
+      - scholarly writing (research_paper)
+      - narrative prose from a book (book_literature)
+    data_source: "ag_news from Hugging Face (300; short snippets, see decisions D19)"
+
+  book_literature:
+    definition: >
+      Book text: fiction, poetry, drama, essays, memoir or narrative
+      non-fiction, in any language.
+    typical_signals:
+      - extended narrative or descriptive prose, dialogue, literary style
+    not_this:
+      - structured scholarly articles with abstract and references (research_paper)
+      - journalistic event reporting (news_article)
+    data_source: "Gutenberg, English (300); Italian/French/Spanish (300). Strip license header and footer first."
+
+rules:
+  - Label by what the document IS, not what it is ABOUT. A news article about a
+    court case is news_article; a filing that describes a lawsuit is financial_filing.
+  - Classify by content only. Ignore language, script and any filename or
+    source hint. The same type gets the same label in every language.
+  - Judge only the text provided; use no outside knowledge of its source.
+  - If two classes are equally plausible, choose the more likely one, set
+    ambiguous to true and give the other as runner_up.
+  - Use "other" only when none of the five classes fits at all (for example
+    source code, a table of numbers, a recipe, or meaningless text).
+  - Text may be a fragment (start, middle or end) with headers removed and
+    OCR-like noise. Classify from what is present.
+
+output_schema:
+  label: "one of the five classes, or other"
+  confidence: "number from 0 to 1"
+  evidence: "at most 25 words describing the content clues that decided it"
+  ambiguous: "true or false"
+  runner_up: "a class name or null"
+
+judge_output_schema:
+  verdict: "correct, incorrect or unsure"
+  suggested_label: "a class name, other, or null if verdict is correct"
+  reason: "at most 25 words"
+
+prompt_design:
+  order: [taxonomy_and_rules, output_schema, document]
+  why: >
+    Static text first and the document last keeps the long shared prefix
+    identical across calls, which is what lets automatic prefix caching reduce
+    cost. Keep the prefix byte-identical across every call in a run.
+  language_note: "One English prompt for all languages; no per-language prompts."
+
+normalization_before_any_model:
+  - strip Gutenberg license header and footer
+  - remove case-law headmatter (case name, citation line, "Opinion of the Court")
+  - normalize PDF extraction artifacts (ligatures, hyphenation, page numbers)
+    so extraction style is not a class cue
+  - drop exact duplicates before splitting

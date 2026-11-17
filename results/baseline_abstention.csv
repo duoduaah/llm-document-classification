@@ -1,0 +1,23 @@
+model,regime,window,train_variant,scope,n,abstain_rate,false_abstain_in_scope,auroc,tau
+tfidf_lr,long,128,structured_first,ALL probe,60,0.3,0.04,0.883,0.415
+tfidf_lr,long,128,structured_first,probe_noise,32,0.5,0.04,,0.415
+tfidf_lr,long,128,structured_first,probe_reviews,28,0.071,0.04,,0.415
+tfidf_lr,long,128,stripped_random,ALL probe,60,0.183,0.062,0.777,0.475
+tfidf_lr,long,128,stripped_random,probe_noise,32,0.25,0.062,,0.475
+tfidf_lr,long,128,stripped_random,probe_reviews,28,0.107,0.062,,0.475
+tfidf_lr,long,256,structured_first,ALL probe,13,0.385,0.059,0.901,0.623
+tfidf_lr,long,256,structured_first,probe_noise,10,0.5,0.059,,0.623
+tfidf_lr,long,256,structured_first,probe_reviews,3,0.0,0.059,,0.623
+tfidf_lr,long,256,stripped_random,ALL probe,13,0.308,0.083,0.832,0.579
+tfidf_lr,long,256,stripped_random,probe_noise,10,0.4,0.083,,0.579
+tfidf_lr,long,256,stripped_random,probe_reviews,3,0.0,0.083,,0.579
+tfidf_lr,long,512,structured_first,ALL probe,2,0.5,0.109,0.928,0.662
+tfidf_lr,long,512,structured_first,probe_noise,2,0.5,0.109,,0.662
+tfidf_lr,long,512,stripped_random,ALL probe,2,0.5,0.087,0.917,0.601
+tfidf_lr,long,512,stripped_random,probe_noise,2,0.5,0.087,,0.601
+tfidf_lr,short,32,structured_first,ALL probe,205,0.346,0.06,0.895,0.335
+tfidf_lr,short,32,structured_first,probe_noise,82,0.598,0.06,,0.335
+tfidf_lr,short,32,structured_first,probe_reviews,123,0.179,0.06,,0.335
+tfidf_lr,short,32,stripped_random,ALL probe,205,0.088,0.041,0.728,0.328
+tfidf_lr,short,32,stripped_random,probe_noise,82,0.098,0.041,,0.328
+tfidf_lr,short,32,stripped_random,probe_reviews,123,0.081,0.041,,0.328

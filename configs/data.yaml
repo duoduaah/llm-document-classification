@@ -1,0 +1,100 @@
+# configs/data.yaml
+# EDIT the paths and field names below to match your downloaded files.
+
+
+seed: 26
+
+paths:
+  canonical_raw: data/raw_canonical        
+  processed: data/processed/docs           
+  experiments: data/experiments            
+  gold: data/gold                         
+
+sources:
+  arxiv:
+    kind: pdf_dir
+    path: data/raw/arxiv_pdfs
+    max_pages: 8                           
+  edgar:
+    kind: jsonl
+    path: data/raw/edgar/test_2020.jsonl
+    section_prefix: section_               
+    min_section_tokens: 200
+    id_field: filename
+  alaska_caselaw:
+    kind: json_dir                         
+    path: data/raw/alaska_caselaw
+    text_paths: ["casebody.opinions", "casebody.data", "text"]
+  agnews:
+    kind: parquet
+    path: data/raw/agnews/agnews.parquet
+    text_field: text
+  gutenberg_en:
+    kind: parquet
+    path: data/raw/gutenberg/en.parquet
+    text_field: text
+  gutenberg_multi:
+    kind: parquet
+    path: data/raw/gutenberg/multi.parquet
+    text_field: text
+    lang_field: language                  
+    lang_default: null
+  multieurlex:
+    files:
+      de: data/raw/multieurlex/de.parquet
+      fr: data/raw/multieurlex/fr.parquet
+      es: data/raw/multieurlex/es.parquet
+      it: data/raw/multieurlex/it.parquet
+      en: data/raw/multieurlex/en.parquet  
+    celex_field: celex_id
+    text_field: text
+
+
+  probe_reviews:
+    kind: parquet
+    path: data/raw/probe/amazon_reviews.parquet
+    text_field: text
+    subtype: reviews
+  probe_noise:
+    kind: parquet
+    path: data/raw/probe/cc_noise.parquet
+    text_field: text
+    subtype: cc_noise
+
+prepare:
+  max_per_class: 300
+  split_counts: {train: 150, val: 50, test: 50}   # used when a class has >= 250 docs
+  fallback_fractions: {train: 0.6, val: 0.2}      # otherwise (rest = test)
+  min_tokens:                                      # drop very short documents
+    arxiv: 200
+    edgar: 200
+    alaska_caselaw: 200
+    agnews: 20
+    gutenberg_en: 200
+    gutenberg_multi: 200
+    multieurlex: 100
+    probe_reviews: 10
+    probe_noise: 10
+  spark: {driver_memory: 4g, shuffle_partitions: 8}
+
+exp1:
+  short_window: 32                          
+  long_windows: [128, 256, 512, 1024]
+  sme_window: 256
+  noise_rates: [0.02, 0.05, 0.10]
+  noise_window_long: 256
+
+exp2:
+  gold_random_per_class: 20
+  gold_hard_total: 50
+  gold_hard_per_class_cap: 15
+  relabel_n: 40
+  corrupt_fraction: 0.20
+  bias_items: 50
+
+exp3:
+  languages_partA: [en, de, fr, es, it]
+  languages_partB: [it, fr, es]
+  chunk_chars: 2000
+  partA_fraction: 0.30                     
+  partB_per_class: 50

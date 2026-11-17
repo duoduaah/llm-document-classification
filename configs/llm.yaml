@@ -1,0 +1,39 @@
+# configs/llm.yaml  -- model settings for src/llm_runner.py
+
+api: interactions            
+api_version: v1beta          
+key_env: GEMINI_API_KEY      
+
+models:
+  a:
+    id: gemini-2.5-flash-lite
+    rpm: 10                  
+    tpm: 250000
+    rpd: 20                  
+    thinking_level: null     
+  b:
+    id: gemini-3.1-flash-lite
+    rpm: 15
+    tpm: 250000
+    rpd: 480                 
+    thinking_level: minimal  
+  c:                         
+    provider: openai
+    id: gpt-6-luna
+    price_in: 0.10           
+    price_out: 0.50
+    key_env: OPENAI_API_KEY
+    rpm: 5000                  
+    tpm: 2000000
+    rpd: null
+    reasoning_effort: null   
+    temperature: null        
+
+safety_margin: 1.15          
+max_retries: 5
+concurrency: 6               
+
+max_chars: 12000             
+temperature: 0.0
+taxonomy: configs/taxonomy.yaml
+cache_dir: data/llm_cache

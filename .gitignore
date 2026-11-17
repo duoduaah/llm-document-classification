@@ -1,0 +1,25 @@
+## data: raw corpora have their own licenses; download them yourself (see README)
+data/
+!results/
+*.parquet
+*.npz
+*.jsonl
+
+# your hand-labeled sheets contain document text
+*annotation*.csv
+*_filled.csv
+*_key.csv
+adjudication_*.csv
+
+# secrets and local environment
+.env
+*.env
+.venv/
+__pycache__/
+*.pyc
+.DS_Store
+.ipynb_checkpoints/
+
+# private working notes
+docs/decisions.md
+docs/pipeline.md
